@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JWT Decoder</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+	</head>
+	<body class="p-2">
+		<div class="container">
+			<h2 class="mb-3">Tools</h2>
+			<div class="card mb-4">
+				<div class="card-body">
+					<h3 class="card-title">JWT Decoder</h3>
+					<form action="/" method="post">
+						<div class="form-group">
+							<textarea name="jwt" class="form-control" rows="4" placeholder="Enter JWT here"></textarea>
+						</div>
+						<input type="submit" class="btn btn-primary" value="Decode JWT" />
+					</form>
+					{% if decoded %}
+					<h4 class="mt-3">Decoded JWT:</h4>
+					<pre>{{ decoded }}</pre>
+					{% endif %}
+				</div>
+			</div>
+			<div class="card mb-4">
+				<div class="card-body">
+					<h2>Guess Encoding or Hash</h2>
+					<form action="/identify" method="post">
+						<div class="form-group">
+							<textarea name="input_string" class="form-control" placeholder="Enter string here"></textarea>
+						</div>
+						<input type="submit" class="btn btn-primary" value="Analyze" />
+					</form>
+					{% if result %}
+					<div class="results">
+						{% if result.base64 %}
+						<p>
+							<strong>Base64 Decoded:</strong>
+							{{ result.base64 }}
+						</p>
+						{% endif %} {% if result.hex %}
+						<p>
+							<strong>Hex Decoded:</strong>
+							{{ result.hex }}
+						</p>
+						{% endif %}
+						<p>
+							<strong>Possible Hash Type:</strong>
+							{{ result.hash_type }}
+						</p>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			<!-- Encryption/Decoding Section -->
+			<div class="card mb-3">
+				<div class="card-body">
+					<h3 class="card-title">Encode/Decode</h3>
+					<form action="/encryption" method="post">
+						<div class="form-group">
+							<textarea name="input" class="form-control" rows="2" placeholder="Enter text or encoded data here"></textarea>
+						</div>
+						<input type="submit" class="btn btn-primary btn-sm" value="Process" />
+					</form>
+					{% if encryption_result %}
+					<h4 class="mt-2">Result:</h4>
+					<pre>{{ encryption_result }}</pre>
+					{% endif %}
+				</div>
+			</div>
+			<div class="card mb-3">
+				<div class="card-body">
+					<h3 class="card-title">Encrypt/Decrypt</h3>
+					<form action="/encryption" method="post">
+						<div class="form-group">
+							<select name="method" class="form-control mb-2">
+								<option value="base64">Base64</option>
+								<option value="sha1">SHA-1</option>
+								<option value="sha256">SHA-2 256</option>
+								<option value="sha3256">SHA-3 256</option>
+								<option value="sha3512">SHA-3 512</option>
+							</select>
+							<textarea name="input" class="form-control" rows="2" placeholder="Enter text here"></textarea>
+						</div>
+						<input type="submit" class="btn btn-primary btn-sm" value="Process" />
+					</form>
+					{% if encryption_result %}
+					<h4 class="mt-2">Result:</h4>
+					<pre>{{ encryption_result }}</pre>
+					{% endif %}
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h3 class="card-title">Password Generator</h3>
+					<form action="/generate_password" method="post">
+						<input type="submit" class="btn btn-primary" value="Generate Password" />
+						{% if generated_password %}
+						<button type="button" class="btn btn-secondary btn-sm" onclick="copyToClipboard()">Copy</button>
+						{% endif %}
+					</form>
+					{% if generated_password %}
+					<h4 class="mt-3">Generated Password:</h4>
+					<p id="generatedPassword">{{ generated_password }}</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script>
+			function copyPassword() {
+				var password = document.getElementById("generatedPassword").innerText;
+				navigator.clipboard.writeText(password).then(
+					function () {
+						console.log("Password copied to clipboard");
+					},
+					function (err) {
+						console.error("Could not copy password: ", err);
+					}
+				);
+			}
+		</script>
+	</body>
+</html>
